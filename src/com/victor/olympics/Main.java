@@ -13,9 +13,10 @@ public class Main {
         List<Event> events = getAthleteEventsData();
         List<Region> regions = getNocRegionsData();
         findYearWiseNumberOfGoldMedalsWonByEachPlayers(events);
-//        findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(events);
+        findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(events);
 
     }
+
 
     public static List<Event> getAthleteEventsData() {
         String path = "resources/Athlete.csv";
@@ -55,7 +56,8 @@ public class Main {
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (Exception e) {
-            System.out.println("Exception Handled");;
+            System.out.println("Exception Handled");
+            ;
         }
         return events;
     }
@@ -90,24 +92,23 @@ public class Main {
     public static void findYearWiseNumberOfGoldMedalsWonByEachPlayers(List<Event> events) {
         HashMap<Integer, HashMap> yearWiseNumberOfGoldMedalsWonByEachPlayer = new HashMap<>();
 
-        for (Event player :events){
+        for (Event player : events) {
             String medal = player.getMedal();
-            if (medal.contains("Gold")){
+            if (medal.contains("Gold")) {
                 Integer year = player.getYear();
                 String name = player.getName();
                 if (yearWiseNumberOfGoldMedalsWonByEachPlayer.containsKey(year)) {
                     HashMap peopleWonGold = yearWiseNumberOfGoldMedalsWonByEachPlayer.get(year);
-                    if (peopleWonGold.containsKey(name)){
+                    if (peopleWonGold.containsKey(name)) {
                         int medalsCount = (int) peopleWonGold.get(name);
-                        peopleWonGold.put(name,medalsCount+=1);
-                    }
-                    else{
-                        peopleWonGold.put(name,1);
+                        peopleWonGold.put(name, medalsCount += 1);
+                    } else {
+                        peopleWonGold.put(name, 1);
                     }
                 } else {
                     HashMap<String, Integer> numberOfGoldMedalsWonByEachPlayer = new HashMap<>();
-                    numberOfGoldMedalsWonByEachPlayer.put(name,1);
-                    yearWiseNumberOfGoldMedalsWonByEachPlayer.put(year,numberOfGoldMedalsWonByEachPlayer );
+                    numberOfGoldMedalsWonByEachPlayer.put(name, 1);
+                    yearWiseNumberOfGoldMedalsWonByEachPlayer.put(year, numberOfGoldMedalsWonByEachPlayer);
                 }
             }
         }
@@ -116,4 +117,13 @@ public class Main {
 
     }
 
+    private static void findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(List<Event> events) {
+        List<String> athletes = new ArrayList<>();
+        for (Event player:events) {
+            if(player.getYear()==2000 && player.getAge()<30 && player.getMedal().contains("Gold")){
+                athletes.add(player.getName());
+            }
+        }
+        System.out.println(athletes);
+    }
 }
