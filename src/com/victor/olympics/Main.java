@@ -15,8 +15,11 @@ public class Main {
         findYearWiseNumberOfGoldMedalsWonByEachPlayers(events);
         findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(events);
         findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(events);
+        findGoldWinnerOfFootballInEveryOlympics(events);
 
     }
+
+
 
 
     public static List<Event> getAthleteEventsData() {
@@ -152,5 +155,14 @@ public class Main {
             }
         }
         System.out.println(eventWiseMedals);
+    }
+    private static void findGoldWinnerOfFootballInEveryOlympics(List<Event> events) {
+        HashMap<Integer,String> goldWinnerOfFootballInEveryOlympics = new HashMap<>();
+        for (Event event:events) {
+            if (event.getSport().contains("Football") && event.getMedal().contains("Gold")){
+                goldWinnerOfFootballInEveryOlympics.put(event.getYear(),event.getTeam());
+            }
+        }
+        System.out.println(goldWinnerOfFootballInEveryOlympics);
     }
 }
