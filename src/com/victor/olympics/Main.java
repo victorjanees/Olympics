@@ -14,6 +14,7 @@ public class Main {
         List<Region> regions = getNocRegionsData();
         findYearWiseNumberOfGoldMedalsWonByEachPlayers(events);
         findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(events);
+        findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(events);
 
     }
 
@@ -101,7 +102,7 @@ public class Main {
                     HashMap peopleWonGold = yearWiseNumberOfGoldMedalsWonByEachPlayer.get(year);
                     if (peopleWonGold.containsKey(name)) {
                         int medalsCount = (int) peopleWonGold.get(name);
-                        peopleWonGold.put(name, medalsCount += 1);
+                        peopleWonGold.put(name, medalsCount + 1);
                     } else {
                         peopleWonGold.put(name, 1);
                     }
@@ -119,11 +120,37 @@ public class Main {
 
     private static void findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(List<Event> events) {
         List<String> athletes = new ArrayList<>();
-        for (Event player:events) {
-            if(player.getYear()==2000 && player.getAge()<30 && player.getMedal().contains("Gold")){
+        for (Event player : events) {
+            if (player.getYear() == 2000 && player.getAge() < 30 && player.getMedal().contains("Gold")) {
                 athletes.add(player.getName());
             }
         }
         System.out.println(athletes);
+    }
+
+    private static void findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(List<Event> events) {
+        HashMap<String,HashMap> eventWiseMedals = new HashMap<>();
+        for (Event event:events) {
+            Integer year = event.getYear();
+            String medal = event.getMedal();
+            if(year==2000){
+                String eventName = event.getEvent();
+                if(eventWiseMedals.containsKey(eventName)){
+                    HashMap medalsPerEvent = eventWiseMedals.get(eventName);
+                    if(medalsPerEvent.containsKey(medal)){
+                        Integer medalCount = (int)medalsPerEvent.get(medal);
+                        medalsPerEvent.put(medal,medalCount+1);
+                    }
+                    else {
+                        medalsPerEvent.put(medal,1);
+                    }
+                }else {
+                    HashMap<String,Integer> numberOfMedalsPerEachEvent = new HashMap<>();
+                    numberOfMedalsPerEachEvent.put(medal,1);
+                    eventWiseMedals.put(eventName,numberOfMedalsPerEachEvent);
+                }
+            }
+        }
+        System.out.println(eventWiseMedals);
     }
 }
