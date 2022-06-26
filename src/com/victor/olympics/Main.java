@@ -3,18 +3,17 @@ package com.victor.olympics;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.security.KeyStore;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         List<Event> events = getAthleteEventsData();
-        List<Region> regions = getNocRegionsData();
         findYearWiseNumberOfGoldMedalsWonByEachPlayers(events);
         findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(events);
         findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(events);
         findGoldWinnerOfFootballInEveryOlympics(events);
         findFemaleAthleteWonMaximumGoldInAllOlympics(events);
+        findAthletesWhoParticipatedInMoreThanThreeOlympics(events);
 
     }
 
@@ -63,32 +62,6 @@ public class Main {
         return events;
     }
 
-    public static List<Region> getNocRegionsData() {
-        String path = "resources/noc_regions.csv";
-        String line = "";
-        int header = 1;
-        List<Region> regions = new ArrayList<>();
-        try {
-            BufferedReader dataReader = new BufferedReader(new FileReader(path));
-            while ((line = dataReader.readLine()) != null) {
-                if (header == 1) {
-                    header = header + 1;
-                    continue;
-                }
-                String[] nocRegionsData = line.split(",");
-                Region region = new Region();
-
-                region.setNoc(nocRegionsData[0]);
-                region.setRegion(nocRegionsData[1]);
-                regions.add(region);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return regions;
-    }
 
     public static void findYearWiseNumberOfGoldMedalsWonByEachPlayers(List<Event> events) {
         HashMap<Integer, HashMap> yearWiseNumberOfGoldMedalsWonByEachPlayer = new HashMap<>();
@@ -176,11 +149,33 @@ public class Main {
             }
         }
         Integer femaleAthleteWonMaximumGoldInAllOlympics = (Collections.max(medalsOfFemaleAthletes.values()));
-        for (Map.Entry<String, Integer> entry:medalsOfFemaleAthletes.entrySet()) {
-            if (entry.getValue() == femaleAthleteWonMaximumGoldInAllOlympics){
-                System.out.println("The Female Athlete with maximum Gold In All Olympics = " + entry.getKey()+" With "+entry.getValue()+" Golds");
+        for (Map.Entry<String, Integer> entry : medalsOfFemaleAthletes.entrySet()) {
+            if (entry.getValue() == femaleAthleteWonMaximumGoldInAllOlympics) {
+                System.out.println("The Female Athlete with maximum Gold In All Olympics = " + entry.getKey() + " With " + entry.getValue() + " Golds");
             }
 
         }
+    }
+
+    private static void findAthletesWhoParticipatedInMoreThanThreeOlympics(List<Event> events) {
+        HashMap<String, Integer> numberOfOlympicsPlayedByPlayer = new HashMap<>();
+        List<String> playersParticipatedMoreThanThreeOlympics = new ArrayList<>();
+        for (Event event : events) {
+            String name = event.getName();
+            Integer year = event.getYear();
+            if (numberOfOlympicsPlayedByPlayer.containsKey(name)) {
+                numberOfOlympicsPlayedByPlayer.put(name, numberOfOlympicsPlayedByPlayer.get(name) + 1);
+            } else {
+                numberOfOlympicsPlayedByPlayer.put(name, 1);
+            }
+        }
+        Integer athletesPlayedMoreThanThreeOlympics = (Collections.max(numberOfOlympicsPlayedByPlayer.values()));
+        for (Map.Entry<String, Integer> entry : numberOfOlympicsPlayedByPlayer.entrySet()) {
+            if (entry.getValue() == athletesPlayedMoreThanThreeOlympics && entry.getValue() > 3) {
+                playersParticipatedMoreThanThreeOlympics.add(entry.getKey());
+            }
+
+        }
+        System.out.println("PlayersWhoPlayedMoreThanThreeOlympics = " + playersParticipatedMoreThanThreeOlympics);
     }
 }
