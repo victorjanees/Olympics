@@ -3,10 +3,8 @@ package com.victor.olympics;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.KeyStore;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,10 +14,9 @@ public class Main {
         findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(events);
         findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(events);
         findGoldWinnerOfFootballInEveryOlympics(events);
+        findFemaleAthleteWonMaximumGoldInAllOlympics(events);
 
     }
-
-
 
 
     public static List<Event> getAthleteEventsData() {
@@ -132,37 +129,58 @@ public class Main {
     }
 
     private static void findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(List<Event> events) {
-        HashMap<String,HashMap> eventWiseMedals = new HashMap<>();
-        for (Event event:events) {
+        HashMap<String, HashMap> eventWiseMedals = new HashMap<>();
+        for (Event event : events) {
             Integer year = event.getYear();
             String medal = event.getMedal();
-            if(year==2000){
+            if (year == 2000) {
                 String eventName = event.getEvent();
-                if(eventWiseMedals.containsKey(eventName)){
+                if (eventWiseMedals.containsKey(eventName)) {
                     HashMap medalsPerEvent = eventWiseMedals.get(eventName);
-                    if(medalsPerEvent.containsKey(medal)){
-                        Integer medalCount = (int)medalsPerEvent.get(medal);
-                        medalsPerEvent.put(medal,medalCount+1);
+                    if (medalsPerEvent.containsKey(medal)) {
+                        Integer medalCount = (int) medalsPerEvent.get(medal);
+                        medalsPerEvent.put(medal, medalCount + 1);
+                    } else {
+                        medalsPerEvent.put(medal, 1);
                     }
-                    else {
-                        medalsPerEvent.put(medal,1);
-                    }
-                }else {
-                    HashMap<String,Integer> numberOfMedalsPerEachEvent = new HashMap<>();
-                    numberOfMedalsPerEachEvent.put(medal,1);
-                    eventWiseMedals.put(eventName,numberOfMedalsPerEachEvent);
+                } else {
+                    HashMap<String, Integer> numberOfMedalsPerEachEvent = new HashMap<>();
+                    numberOfMedalsPerEachEvent.put(medal, 1);
+                    eventWiseMedals.put(eventName, numberOfMedalsPerEachEvent);
                 }
             }
         }
         System.out.println(eventWiseMedals);
     }
+
     private static void findGoldWinnerOfFootballInEveryOlympics(List<Event> events) {
-        HashMap<Integer,String> goldWinnerOfFootballInEveryOlympics = new HashMap<>();
-        for (Event event:events) {
-            if (event.getSport().contains("Football") && event.getMedal().contains("Gold")){
-                goldWinnerOfFootballInEveryOlympics.put(event.getYear(),event.getTeam());
+        HashMap<Integer, String> goldWinnerOfFootballInEveryOlympics = new HashMap<>();
+        for (Event event : events) {
+            if (event.getSport().contains("Football") && event.getMedal().contains("Gold")) {
+                goldWinnerOfFootballInEveryOlympics.put(event.getYear(), event.getTeam());
             }
         }
         System.out.println(goldWinnerOfFootballInEveryOlympics);
+    }
+
+    private static void findFemaleAthleteWonMaximumGoldInAllOlympics(List<Event> events) {
+        HashMap<String, Integer> medalsOfFemaleAthletes = new HashMap<>();
+        for (Event event : events) {
+            String name = event.getName();
+            if (event.getSex().contains("F") && event.getMedal().contains("Gold")) {
+                if (medalsOfFemaleAthletes.containsKey(name)) {
+                    medalsOfFemaleAthletes.put(name, medalsOfFemaleAthletes.get(name) + 1);
+                } else {
+                    medalsOfFemaleAthletes.put(name, 1);
+                }
+            }
+        }
+        Integer femaleAthleteWonMaximumGoldInAllOlympics = (Collections.max(medalsOfFemaleAthletes.values()));
+        for (Map.Entry<String, Integer> entry:medalsOfFemaleAthletes.entrySet()) {
+            if (entry.getValue() == femaleAthleteWonMaximumGoldInAllOlympics){
+                System.out.println("The Female Athlete with maximum Gold In All Olympics = " + entry.getKey()+" With "+entry.getValue()+" Golds");
+            }
+
+        }
     }
 }
