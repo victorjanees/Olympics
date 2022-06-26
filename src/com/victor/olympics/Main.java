@@ -6,6 +6,21 @@ import java.io.FileReader;
 import java.util.*;
 
 public class Main {
+    public static final int ID = 0;
+    public static final int NAME = 1;
+    public static final int SEX = 2;
+    public static final int AGE = 3;
+    public static final int HEIGHT = 4;
+    public static final int WEIGHT = 5;
+    public static final int TEAM = 6;
+    public static final int NOC = 7;
+    public static final int GAMES = 8;
+    public static final int YEAR = 9;
+    public static final int SEASON = 10;
+    public static final int CITY = 11;
+    public static final int SPORT = 12;
+    public static final int EVENT = 13;
+    public static final int MEDAL = 14;
     public static void main(String[] args) {
         List<Event> events = getAthleteEventsData();
         findYearWiseNumberOfGoldMedalsWonByEachPlayers(events);
@@ -33,44 +48,43 @@ public class Main {
                 String[] athleteEventData = line.split(",");
                 Event event = new Event();
 
-                Integer age = Integer.parseInt(athleteEventData[3]);
-                Integer year = Integer.parseInt(athleteEventData[9]);
+                Integer age = Integer.parseInt(athleteEventData[AGE]);
+                Integer year = Integer.parseInt(athleteEventData[YEAR]);
 
-                event.setId(athleteEventData[0]);
-                event.setName(athleteEventData[1]);
-                event.setSex(athleteEventData[2]);
+                event.setId(athleteEventData[ID]);
+                event.setName(athleteEventData[NAME]);
+                event.setSex(athleteEventData[SEX]);
                 event.setAge(age);
-                event.setHeight(athleteEventData[4]);
-                event.setWeight(athleteEventData[5]);
-                event.setTeam(athleteEventData[6]);
-                event.setNoc(athleteEventData[7]);
-                event.setGames(athleteEventData[8]);
+                event.setHeight(athleteEventData[HEIGHT]);
+                event.setWeight(athleteEventData[WEIGHT]);
+                event.setTeam(athleteEventData[TEAM]);
+                event.setNoc(athleteEventData[NOC]);
+                event.setGames(athleteEventData[GAMES]);
                 event.setYear(year);
-                event.setSeason(athleteEventData[10]);
-                event.setCity(athleteEventData[11]);
-                event.setSport(athleteEventData[12]);
-                event.setEvent(athleteEventData[13]);
-                event.setMedal(athleteEventData[14]);
+                event.setSeason(athleteEventData[SEASON]);
+                event.setCity(athleteEventData[CITY]);
+                event.setSport(athleteEventData[SPORT]);
+                event.setEvent(athleteEventData[EVENT]);
+                event.setMedal(athleteEventData[MEDAL]);
                 events.add(event);
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (Exception e) {
             System.out.println("Exception Handled");
-            ;
         }
         return events;
     }
 
 
-    public static void findYearWiseNumberOfGoldMedalsWonByEachPlayers(List<Event> events) {
+    private static void findYearWiseNumberOfGoldMedalsWonByEachPlayers(List<Event> events) {
         HashMap<Integer, HashMap> yearWiseNumberOfGoldMedalsWonByEachPlayer = new HashMap<>();
 
-        for (Event player : events) {
-            String medal = player.getMedal();
+        for (Event event : events) {
+            String medal = event.getMedal();
             if (medal.contains("Gold")) {
-                Integer year = player.getYear();
-                String name = player.getName();
+                Integer year = event.getYear();
+                String name = event.getName();
                 if (yearWiseNumberOfGoldMedalsWonByEachPlayer.containsKey(year)) {
                     HashMap peopleWonGold = yearWiseNumberOfGoldMedalsWonByEachPlayer.get(year);
                     if (peopleWonGold.containsKey(name)) {
@@ -86,19 +100,19 @@ public class Main {
                 }
             }
         }
-        System.out.println(yearWiseNumberOfGoldMedalsWonByEachPlayer);
+//        System.out.println(yearWiseNumberOfGoldMedalsWonByEachPlayer);
 
 
     }
 
     private static void findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(List<Event> events) {
         List<String> athletes = new ArrayList<>();
-        for (Event player : events) {
-            if (player.getYear() == 2000 && player.getAge() < 30 && player.getMedal().contains("Gold")) {
-                athletes.add(player.getName());
+        for (Event event : events) {
+            if (event.getYear() == 2000 && event.getAge() < 30 && event.getMedal().contains("Gold")) {
+                athletes.add(event.getName());
             }
         }
-        System.out.println(athletes);
+//        System.out.println(athletes);
     }
 
     private static void findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(List<Event> events) {
@@ -109,12 +123,14 @@ public class Main {
             if (year == 2000) {
                 String eventName = event.getEvent();
                 if (eventWiseMedals.containsKey(eventName)) {
-                    HashMap medalsPerEvent = eventWiseMedals.get(eventName);
-                    if (medalsPerEvent.containsKey(medal)) {
-                        Integer medalCount = (int) medalsPerEvent.get(medal);
-                        medalsPerEvent.put(medal, medalCount + 1);
-                    } else {
-                        medalsPerEvent.put(medal, 1);
+                    if (medal.equals("Gold") || medal.equals("Silver") || medal.equals("Bronze")) {
+                        HashMap medalsPerEvent = eventWiseMedals.get(eventName);
+                        if (medalsPerEvent.containsKey(medal)) {
+                            Integer medalCount = (int) medalsPerEvent.get(medal);
+                            medalsPerEvent.put(medal, medalCount+1);
+                        } else {
+                            medalsPerEvent.put(medal, 1);
+                        }
                     }
                 } else {
                     HashMap<String, Integer> numberOfMedalsPerEachEvent = new HashMap<>();
@@ -162,7 +178,6 @@ public class Main {
         List<String> playersParticipatedMoreThanThreeOlympics = new ArrayList<>();
         for (Event event : events) {
             String name = event.getName();
-            Integer year = event.getYear();
             if (numberOfOlympicsPlayedByPlayer.containsKey(name)) {
                 numberOfOlympicsPlayedByPlayer.put(name, numberOfOlympicsPlayedByPlayer.get(name) + 1);
             } else {
