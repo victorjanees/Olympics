@@ -21,6 +21,7 @@ public class Main {
     public static final int SPORT = 12;
     public static final int EVENT = 13;
     public static final int MEDAL = 14;
+
     public static void main(String[] args) {
         List<Event> events = getAthleteEventsData();
         findYearWiseNumberOfGoldMedalsWonByEachPlayers(events);
@@ -31,8 +32,6 @@ public class Main {
         findAthletesWhoParticipatedInMoreThanThreeOlympics(events);
 
     }
-
-
     public static List<Event> getAthleteEventsData() {
         String path = "resources/Athlete.csv";
         String line = "";
@@ -100,9 +99,7 @@ public class Main {
                 }
             }
         }
-//        System.out.println(yearWiseNumberOfGoldMedalsWonByEachPlayer);
-
-
+        System.out.println(yearWiseNumberOfGoldMedalsWonByEachPlayer);
     }
 
     private static void findAthletesWhoWonGoldMedalIn2000AndAgeIsLessThan30Years(List<Event> events) {
@@ -112,30 +109,33 @@ public class Main {
                 athletes.add(event.getName());
             }
         }
-//        System.out.println(athletes);
+        System.out.println(athletes);
     }
 
     private static void findEventWiseNumberOfGoldSilverBronzeMedalsInYear2000(List<Event> events) {
         HashMap<String, HashMap> eventWiseMedals = new HashMap<>();
         for (Event event : events) {
             Integer year = event.getYear();
-            String medal = event.getMedal();
             if (year == 2000) {
                 String eventName = event.getEvent();
                 if (eventWiseMedals.containsKey(eventName)) {
+                    String medal = event.getMedal();
                     if (medal.equals("Gold") || medal.equals("Silver") || medal.equals("Bronze")) {
-                        HashMap medalsPerEvent = eventWiseMedals.get(eventName);
-                        if (medalsPerEvent.containsKey(medal)) {
-                            Integer medalCount = (int) medalsPerEvent.get(medal);
-                            medalsPerEvent.put(medal, medalCount+1);
+                        HashMap numberOfMedalsPerEachEvent = eventWiseMedals.get(eventName);
+                        if (numberOfMedalsPerEachEvent.containsKey(medal)) {
+                            Integer medalCount = (int) numberOfMedalsPerEachEvent.get(medal);
+                            numberOfMedalsPerEachEvent.put(medal, medalCount + 1);
                         } else {
-                            medalsPerEvent.put(medal, 1);
+                            numberOfMedalsPerEachEvent.put(medal, 1);
                         }
                     }
                 } else {
                     HashMap<String, Integer> numberOfMedalsPerEachEvent = new HashMap<>();
-                    numberOfMedalsPerEachEvent.put(medal, 1);
-                    eventWiseMedals.put(eventName, numberOfMedalsPerEachEvent);
+                    String medal = event.getMedal();
+                    if (medal.equals("Gold") || medal.equals("Silver") || medal.equals("Bronze")) {
+                        eventWiseMedals.put(eventName, numberOfMedalsPerEachEvent);
+                        eventWiseMedals.get(eventName).put(medal, 1);
+                    }
                 }
             }
         }
@@ -189,7 +189,6 @@ public class Main {
             if (entry.getValue() == athletesPlayedMoreThanThreeOlympics && entry.getValue() > 3) {
                 playersParticipatedMoreThanThreeOlympics.add(entry.getKey());
             }
-
         }
         System.out.println("PlayersWhoPlayedMoreThanThreeOlympics = " + playersParticipatedMoreThanThreeOlympics);
     }
